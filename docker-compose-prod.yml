@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    restart: always
+    volumes:
+      - prod-static-data:/vol/web
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_PORT=${DB_PORT}
+      - SECRET_KEY=${DJANGO_SECRET_KEY}
+      - ALLOWED_HOST=${DJANGO_ALLOWED_HOSTS}
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14.3-alpine
+    restart: always
+    volumes:
+      - prod-postgres-data:/var/lib/postgres/data
+    environment:
+      - POSTGRES_DB=dbname
+      - POSTGRES_USER=rootuser
+      - POSTGRES_PASSWORD=${DB_PASS}
+
+  proxy:
+    build:
+      context: ./proxy
+    restart: always
+    depends_on:
+      - app
+    ports:
+      - 8000:8000
+    volumes:
+      - prod-static-data:/vol/static
+
+volumes:
+  prod-static-data:
+  prod-postgres-data:
