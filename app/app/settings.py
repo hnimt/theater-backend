@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
-    'core',
+    'core', 'user', 'genre', 'movie', 'actor', 'director', 'room', 'seat',
+    'show_date', 'show_time', 'ticket', 'invoice', 'schedule_movie', 'schedule_seat'
 ]
 
 MIDDLEWARE = [
@@ -95,6 +96,12 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': '20',
+    'EXCEPTION_HANDLER': 'core.exceptions.custom_exception_handler'
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -120,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Ho_Chi_Minh'
 
 USE_I18N = True
 
@@ -150,3 +157,5 @@ REST_FRAMEWORK = {
 SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
 }
+
+AUTH_USER_MODEL = 'user.User'
