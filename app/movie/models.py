@@ -14,6 +14,7 @@ class Movie(ModelBase):
     actors = models.ManyToManyField(Actor, related_name="movies")
     directors = models.ManyToManyField(Director, related_name="movies")
     genres = models.ManyToManyField(Genre, related_name="movies", blank=False)
+    trailer = models.TextField(null=False, blank=False, default='https://www.youtube.com/embed/SNkwT1DfmVU')
 
     def __str__(self):
         return self.title

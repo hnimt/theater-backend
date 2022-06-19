@@ -6,8 +6,8 @@ from core.models import ModelBase
 
 
 class Invoice(ModelBase):
-    tax = models.DecimalField(default=constants.TAX, max_digits=10, decimal_places=5)
-    total = models.DecimalField(default=0.00, max_digits=10, decimal_places=5)
+    tax = models.DecimalField(default=constants.TAX, max_digits=10, decimal_places=2)
+    total = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     user = models.ForeignKey(get_user_model(), related_name="invoices", on_delete=models.CASCADE)
 
     def __str__(self):

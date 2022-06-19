@@ -1,5 +1,3 @@
-import decimal
-
 from django.db import transaction
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter
@@ -11,15 +9,12 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework import permissions
 from rest_framework.response import Response
-
 from core import constants
 from invoice.models import Invoice
-from invoice.serializers import InvoiceSerializer, InvoiceSeatsSerializer
+from invoice.serializers import InvoiceSeatsSerializer
 from schedule_seat.exceptions import BookedException
 from schedule_seat.models import ScheduleSeat
 from schedule_seat.serializers import ScheduleSeatSerializer, ScheduleSeatBookSerializer
-from seat.models import Seat
-from seat.serializers import SeatSerializer
 from ticket.models import Ticket
 
 

@@ -8,7 +8,8 @@ from user.models import User
 class UserAdmin(BaseUserAdmin):
     """Define the admin pages for users."""
     ordering = ['id']
-    list_display = ['email', 'name']
+    list_display = ['id', 'email', 'name']
+    list_display_links = ['id', 'email']
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (

@@ -13,7 +13,8 @@ class MovieSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ['id', 'title', 'description', 'duration', 'image', 'genres', 'directors', 'actors', 'created_at', 'updated_at']
+        fields = ['id', 'title', 'description', 'duration', 'image', 'genres',
+                  'directors', 'actors', 'created_at', 'updated_at', 'trailer']
 
 
 class MovieScheduleSerializer(MovieSerializer):

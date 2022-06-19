@@ -5,7 +5,7 @@ from core.models import ModelBase
 
 
 class Ticket(ModelBase):
-    price = models.DecimalField(max_digits=4, decimal_places=2)
+    price = models.DecimalField(default=0.0, max_digits=4, decimal_places=2)
     type = models.CharField(max_length=10, choices=SEAT_TYPES)
 
     def __str__(self):
