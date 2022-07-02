@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from core import constants
 from invoice.models import Invoice
 from invoice.serializers import InvoiceSeatsSerializer
+from movie.models import Movie
 from schedule_seat.exceptions import BookedException
 from schedule_seat.models import ScheduleSeat
 from schedule_seat.serializers import ScheduleSeatSerializer, ScheduleSeatBookSerializer
@@ -69,6 +70,10 @@ class ScheduleSeatView(viewsets.ViewSet,
         total = 0
         for schedule_seat in schedule_seats:
             ticket = Ticket.objects.get(type=schedule_seat.seat.type, is_deleted=False)
+            movie = schedule_seat.schedule_movie.movie
+            movie_views = movie.views + 1
+            Movie.objects.update(views=movie_views)
+
             total += ticket.price
         total += total * tax
         invoice = Invoice.objects.create(tax=tax, total=total, user=request.user)
