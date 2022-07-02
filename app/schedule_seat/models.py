@@ -34,9 +34,17 @@ class ScheduleSeat(ModelBase):
 
 
 @receiver(post_save, sender=ScheduleMovie)
-def create_schedule_seat(sender, instance, created, **kwargs):
+def create_schedule_seat_by_schedule_movie(sender, instance, created, **kwargs):
     if created:
         seats = Seat.objects.filter(room=instance.room)
         for seat in seats:
             ScheduleSeat.objects.create(schedule_movie=instance,
                                         seat=seat, is_booked=False)
+
+@receiver(post_save, sender=Seat)
+def create_schedule_seat_by_seat(sender, instance, created, **kwargs):
+    if created:
+        schedule_movies = ScheduleMovie.objects.filter(room=instance.room).all()
+        for schedule_movie in schedule_movies:
+            ScheduleSeat.objects.create(schedule_movie=schedule_movie,
+                                        seat=instance, is_booked=False)

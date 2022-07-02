@@ -9,5 +9,6 @@ class ScheduleMovieAdmin(admin.ModelAdmin):
 
     list_display = ['id', 'movie', 'room', 'show_date', 'show_time']
     list_display_links = ['id', 'movie']
+    search_fields = ['movie__title']
 
 admin.site.register(ScheduleMovie, ScheduleMovieAdmin)

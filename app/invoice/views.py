@@ -23,7 +23,7 @@ class InvoiceViewSet(viewsets.ViewSet,
 
     def list(self, request):
         invoices = self.queryset.filter(user=self.request.user)\
-            .order_by('created_at')
+            .order_by('-created_at')
         res = []
 
         for invoice in invoices:
