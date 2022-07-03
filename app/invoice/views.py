@@ -46,3 +46,11 @@ class InvoiceViewSet(viewsets.ViewSet,
         qs = self.paginator.paginate_queryset(res, request)
         serializer = self.get_serializer(qs, many=True)
         return self.paginator.get_paginated_response(serializer.data)
+
+
+class UpdateInvoiceViewSet(viewsets.ViewSet,
+                           generics.UpdateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = Invoice.objects.filter(is_deleted=False)
+    serializer_class = InvoiceSerializer

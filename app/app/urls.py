@@ -36,6 +36,7 @@ urlpatterns = [
     path('api/schedule-seats/', include('schedule_seat.urls')),
     path('api/invoices/', include('invoice.urls')),
     path('api/genres/', include('genre.urls')),
+    path('api/comments/', include('comment.urls')),
 ]
 
 if settings.DEBUG:

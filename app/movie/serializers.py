@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from actor.serializers import ActorSerializer
+from comment.serializers import CommentSerializer
 from director.serializers import DirectorSerializer
 from genre.serializers import GenreSerializer
 from movie.models import Movie
@@ -10,11 +11,12 @@ class MovieSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(many=True, read_only=True)
     directors = DirectorSerializer(many=True, read_only=True)
     actors = ActorSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Movie
         fields = ['id', 'title', 'description', 'duration', 'image', 'genres',
-                  'directors', 'actors', 'created_at', 'updated_at', 'trailer']
+                  'directors', 'actors', 'created_at', 'updated_at', 'trailer', 'comments']
 
 
 class MovieScheduleSerializer(MovieSerializer):

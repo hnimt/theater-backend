@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     "corsheaders",
     'core', 'user', 'genre', 'movie', 'actor', 'director', 'room', 'seat',
-    'show_date', 'show_time', 'ticket', 'invoice', 'schedule_movie', 'schedule_seat'
+    'show_date', 'show_time', 'ticket', 'invoice', 'schedule_movie', 'schedule_seat',
+    'comment'
 ]
 
 MIDDLEWARE = [

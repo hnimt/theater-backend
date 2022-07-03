@@ -9,7 +9,7 @@ from drf_spectacular.utils import (
     OpenApiTypes,
 )
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 from core.paginator import MyPagination
 from invoice.models import Invoice
@@ -53,7 +53,6 @@ class MovieViewSet(viewsets.ViewSet,
                 Q(schedule_movies__show_date__value=datetime.now().date(),
                   schedule_movies__show_time__value__gte=datetime.now().time()))\
         .order_by('-id').distinct()
-    authentication_classes = [TokenAuthentication,]
 
     def get_queryset(self):
         genre_name = self.request.query_params.get('genre')
@@ -72,52 +71,54 @@ class MovieViewSet(viewsets.ViewSet,
 
         return self.queryset
 
-    @action(methods=['GET'], detail=False, url_path='recommended_by_genre')
-    def get_recommended_by_genre(self, request):
-        if request.user.is_anonymous:
+
+class ListRecommendedMovieViewSet(viewsets.ViewSet,
+                                  generics.ListAPIView):
+    serializer_class = MovieSerializer
+    pagination_class = MyPagination
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = Movie.objects.filter(is_deleted=False) \
+        .filter(Q(schedule_movies__show_date__value__gt=datetime.now().date()) |
+                Q(schedule_movies__show_date__value=datetime.now().date(),
+                  schedule_movies__show_time__value__gte=datetime.now().time())) \
+        .order_by('-id').distinct()
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        invoices = Invoice.objects.filter(is_deleted=False, user=user) \
+            .order_by('created_at')
+
+        # If new user
+        if len(invoices) == 0:
             return self.get_recommended_movies_for_new_or_anonymous_user(request)
 
-        else:
-            user = request.user
-            invoices = Invoice.objects.filter(is_deleted=False, user=user)\
-                .order_by('created_at')
-
-            # If new user
-            if len(invoices) == 0:
-                return self.get_recommended_movies_for_new_or_anonymous_user(request)
-
-            genre_count_dict = {}
-            for invoice in invoices:
-                schedule_seats = invoice.schedule_seats.all()
-                if len(schedule_seats) > 0:
-                    schedule_movie = schedule_seats.all()[0].schedule_movie
-                    movie = schedule_movie.movie
-                    genres = movie.genres.all()
-                    for genre in genres:
-                        if genre_count_dict.keys().__contains__(genre.name):
-                            genre_count_dict[genre.name] = genre_count_dict[genre.name] + 1
-                        else:
-                            genre_count_dict[genre.name] = 1
-
-                else:
-                    pass
-
-            dict(sorted(genre_count_dict.items(), key = lambda x: x[1], reverse=True))
-            movie_set = set([])
-            for genre in genre_count_dict.keys():
-                movies = self.queryset.filter(genres__name=genre)
-                for movie in movies:
-                    if len(movie_set) < 6:
-                        movie_set.add(movie)
+        genre_count_dict = {}
+        for invoice in invoices:
+            schedule_seats = invoice.schedule_seats.all()
+            if len(schedule_seats) > 0:
+                schedule_movie = schedule_seats.all()[0].schedule_movie
+                movie = schedule_movie.movie
+                genres = movie.genres.all()
+                for genre in genres:
+                    if genre_count_dict.keys().__contains__(genre.name):
+                        genre_count_dict[genre.name] = genre_count_dict[genre.name] + 1
                     else:
-                        break
+                        genre_count_dict[genre.name] = 1
 
-            qs = self.paginator.paginate_queryset(list(movie_set), request)
-            serializer = self.get_serializer(qs, many=True)
-            return self.paginator.get_paginated_response(serializer.data)
+            else:
+                pass
 
-    def get_recommended_movies_for_new_or_anonymous_user(self, request):
-        movies = self.queryset
-        qs = self.paginator.paginate_queryset(movies, request)
+        dict(sorted(genre_count_dict.items(), key=lambda x: x[1], reverse=True))
+        movie_set = set([])
+        for genre in genre_count_dict.keys():
+            movies = self.queryset.filter(genres__name=genre)
+            for movie in movies:
+                if len(movie_set) < 6:
+                    movie_set.add(movie)
+                else:
+                    break
+
+        qs = self.paginator.paginate_queryset(list(movie_set), request)
         serializer = self.get_serializer(qs, many=True)
         return self.paginator.get_paginated_response(serializer.data)

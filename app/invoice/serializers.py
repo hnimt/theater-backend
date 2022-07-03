@@ -10,7 +10,14 @@ from show_time.serializers import ShowTimeSerializer
 class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
-        fields = ['id', 'tax', 'total', 'user']
+        fields = ['id', 'tax', 'total', 'user', 'is_deleted', 'is_pay']
+        read_only_fields = ('id', 'tax', 'total', 'user', 'is_pay')
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        if instance.user == user:
+            return super().update(instance, validated_data)
+        raise serializers.ValidationError(_("Not permission to update comment."))
 
 
 class InvoiceSeatsSerializer(InvoiceSerializer):

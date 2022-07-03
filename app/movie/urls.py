@@ -5,7 +5,8 @@ from movie import views
 
 
 router = DefaultRouter()
-router.register('', views.MovieViewSet, 'movie')
+router.register('all', views.MovieViewSet, 'movie-list')
+router.register('recommended_by_genre', views.ListRecommendedMovieViewSet, 'movie-recommend')
 
 urlpatterns = [
     path('', include(router.urls)),
