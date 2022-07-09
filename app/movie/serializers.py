@@ -11,12 +11,11 @@ class MovieSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(many=True, read_only=True)
     directors = DirectorSerializer(many=True, read_only=True)
     actors = ActorSerializer(many=True, read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Movie
         fields = ['id', 'title', 'description', 'duration', 'image', 'genres',
-                  'directors', 'actors', 'created_at', 'updated_at', 'trailer', 'comments']
+                  'directors', 'actors', 'created_at', 'updated_at', 'trailer']
 
 
 class MovieScheduleSerializer(MovieSerializer):

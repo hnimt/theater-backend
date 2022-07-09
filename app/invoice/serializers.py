@@ -5,6 +5,7 @@ from movie.serializers import MovieSerializer
 from seat.serializers import SeatSerializer
 from show_date.serializers import ShowDateSerializer
 from show_time.serializers import ShowTimeSerializer
+from django.utils.translation import gettext_lazy as _
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
@@ -15,9 +16,13 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         user = self.context['request'].user
+        schedule_seats = instance.schedule_seats.all()
+        for ss in schedule_seats:
+            ss.is_booked = False
+            ss.save()
         if instance.user == user:
             return super().update(instance, validated_data)
-        raise serializers.ValidationError(_("Not permission to update comment."))
+        raise serializers.ValidationError(_("Not permission to update invoice."))
 
 
 class InvoiceSeatsSerializer(InvoiceSerializer):

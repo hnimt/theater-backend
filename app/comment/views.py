@@ -9,6 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from comment.models import Comment
 from comment.serializers import CommentSerializer
+from core.paginator import MyPagination
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -25,6 +27,7 @@ class ListCommentViewSet(viewsets.ViewSet,
                          generics.ListAPIView):
     queryset = Comment.objects.filter(is_deleted=False)
     serializer_class = CommentSerializer
+    pagination_class = MyPagination
 
     def get_queryset(self):
         comments = self.queryset

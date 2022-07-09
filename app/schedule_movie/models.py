@@ -10,7 +10,7 @@ from show_time.models import ShowTime
 class ScheduleMovie(ModelBase):
     class Meta:
         db_table = "theater_schedule_movie"
-        unique_together = ['room', 'show_date', 'show_time']
+        unique_together = (('room', 'show_date', 'show_time'),)
 
     movie = models.ForeignKey(Movie, related_name="schedule_movies", on_delete=models.CASCADE)
     room = models.ForeignKey(Room, related_name="schedule_movies", on_delete=models.CASCADE)

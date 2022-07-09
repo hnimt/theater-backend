@@ -1,3 +1,5 @@
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
 from rest_framework import viewsets, generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -6,7 +8,17 @@ from core.paginator import MyPagination
 from invoice.models import Invoice
 from invoice.serializers import InvoiceSerializer, InvoiceUserSerializer
 
-
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                'is_pay',
+                OpenApiTypes.STR,
+                description='Is payed',
+            ),
+        ]
+    )
+)
 class InvoiceViewSet(viewsets.ViewSet,
                      generics.ListAPIView):
     authentication_classes = [TokenAuthentication]
@@ -22,7 +34,12 @@ class InvoiceViewSet(viewsets.ViewSet,
         return self.serializer_class
 
     def list(self, request):
-        invoices = self.queryset.filter(user=self.request.user)\
+        invoice = self.queryset
+        is_pay = request.query_params.get('is_pay')
+        if is_pay and is_pay != "":
+            invoice = self.queryset.filter(is_pay=is_pay)
+
+        invoices = invoice.filter(user=self.request.user)\
             .order_by('-created_at')
         res = []
 
