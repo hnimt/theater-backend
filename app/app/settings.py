@@ -48,10 +48,14 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_spectacular',
     "corsheaders",
+    'django_celery_results',
+    'django_celery_beat',
     'core', 'user', 'genre', 'movie', 'actor', 'director', 'room', 'seat',
     'show_date', 'show_time', 'ticket', 'invoice', 'schedule_movie', 'schedule_seat',
     'comment'
 ]
+
+CELERY_BROKER_URL = 'amqp://backend_rabbitmq_1'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -164,3 +168,6 @@ SPECTACULAR_SETTINGS = {
 }
 
 AUTH_USER_MODEL = 'user.User'
+
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'

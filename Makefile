@@ -21,3 +21,12 @@ superuser:
 
 start:
 	docker-compose run --rm app sh -c "python manage.py runserver"
+
+celery:
+	docker-compose run --rm app sh -c "celery -A app worker -l INFO"
+
+celery-clear:
+	docker-compose run --rm app sh -c "celery -A app purge -f"
+
+beat:
+	docker-compose run --rm app sh -c "celery -A app beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
