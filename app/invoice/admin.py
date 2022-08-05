@@ -11,7 +11,7 @@ class InvoiceAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'get_movie', 'get_room', 'get_show_date', 'get_show_time', 'is_pay']
     list_display_links = ['id', 'user']
     search_fields = ['id' ,'user__email']
-    list_filter = ['is_pay']
+    list_filter = ['is_pay', 'schedule_seats__schedule_movie__room__name']
 
     @admin.display(description='movie')
     def get_movie(self, obj):
