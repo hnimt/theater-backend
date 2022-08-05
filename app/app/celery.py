@@ -22,7 +22,7 @@ app.autodiscover_tasks()
 app.conf.schedule_beat = {
     'unbook_schedule_seat': {
         'task': 'invoice.tasks.unbook_schedule_seat',
-        'schedule': 20.0,
+        'schedule': 60.0,
     }
 }
 

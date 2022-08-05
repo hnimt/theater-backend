@@ -11,8 +11,8 @@ from django.utils.translation import gettext_lazy as _
 class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
-        fields = ['id', 'tax', 'total', 'user', 'is_deleted', 'is_pay']
-        read_only_fields = ('id', 'tax', 'total', 'user', 'is_pay')
+        fields = ['id', 'tax', 'total', 'user', 'is_deleted', 'is_pay', 'is_canceled']
+        read_only_fields = ('id', 'tax', 'total', 'user', 'is_pay', 'is_canceled')
 
     def update(self, instance, validated_data):
         user = self.context['request'].user

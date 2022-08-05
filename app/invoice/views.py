@@ -34,13 +34,15 @@ class InvoiceViewSet(viewsets.ViewSet,
         return self.serializer_class
 
     def list(self, request):
-        invoice = self.queryset
-        is_pay = request.query_params.get('is_pay')
-        if is_pay and is_pay != "":
-            invoice = self.queryset.filter(is_pay=is_pay)
+        filtered_invoices = self.queryset
+        is_canceled = request.query_params.get('is_canceled')
+        if is_canceled and is_canceled != "":
+            filtered_invoices = filtered_invoices.filter(is_canceled=is_canceled)
 
-        invoices = invoice.filter(user=self.request.user)\
+        invoices = (
+            filtered_invoices.filter(user=self.request.user)
             .order_by('-created_at')
+        )
         res = []
 
         for invoice in invoices:
