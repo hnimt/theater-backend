@@ -19,12 +19,12 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
 
-app.conf.schedule_beat = {
-    'unbook_schedule_seat': {
-        'task': 'invoice.tasks.unbook_schedule_seat',
-        'schedule': 60.0,
-    }
-}
+# app.conf.schedule_beat = {
+#     'unbook_schedule_seat': {
+#         'task': 'invoice.tasks.unbook_schedule_seat',
+#         'schedule': 60.0,
+#     }
+# }
 
 @app.task(bind=True)
 def debug_task(self):

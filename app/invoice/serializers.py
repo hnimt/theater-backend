@@ -12,7 +12,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = ['id', 'tax', 'total', 'user', 'is_deleted', 'is_pay', 'is_canceled']
-        read_only_fields = ('id', 'tax', 'total', 'user', 'is_pay', 'is_canceled')
+        read_only_fields = ('id', 'tax', 'total', 'user', 'is_pay')
 
     def update(self, instance, validated_data):
         user = self.context['request'].user
